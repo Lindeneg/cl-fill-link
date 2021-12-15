@@ -24,4 +24,4 @@ jobs:
           cache: "yarn"
       - run: yarn install --frozen-lockfile
       - run: yarn test
-      - run: yarn build --build --verbose
+      - run: yarn build -b -f -v --listEmittedFiles
