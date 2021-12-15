@@ -1,0 +1,11 @@
+{
+  "name": "cl-fill-link",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^16.11.13",
+    "typescript": "^4.5.4"
+  }
+}
