@@ -5,7 +5,9 @@ type ReplacerValue<T extends string, K extends unknown> = K extends string
     ? [string, ...string[]]
     : T extends `${infer P}[[...${K}]]`
     ? string[]
-    : string
+    : T extends `${infer M}${K}${infer N}`
+    ? string
+    : never
   : never;
 
 type Replacer<T extends string, U extends Obj> = {
@@ -43,7 +45,7 @@ export function fillLink<T extends string, K extends Obj>(
   try {
     return fillLinkSafe(link, replacer);
   } catch (err) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.log(err);
     }
     return link;
