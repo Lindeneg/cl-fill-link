@@ -45,7 +45,7 @@ export function fillLink<T extends string, K extends Obj>(
   try {
     return fillLinkSafe(link, replacer);
   } catch (err) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.log(err);
     }
     return link;
