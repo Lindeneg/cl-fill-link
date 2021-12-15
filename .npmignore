@@ -1,0 +1,9 @@
+__tests__
+.github
+node_modules
+src
+.gitignore
+jest.config.js
+notes
+tsconfig.json
+yarn.lock

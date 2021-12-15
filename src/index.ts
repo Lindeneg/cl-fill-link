@@ -29,7 +29,7 @@ export function fillLinkSafe<T extends string, K extends Obj>(
           return Array.isArray(val) ? val.join("/") : val;
         } else {
           throw new Error(
-            `Warning: key '${key}' is missing from replacer object in link '${link}'`
+            `Error: key '${key}' is missing from replacer object in link '${link}'`
           );
         }
       }

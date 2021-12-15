@@ -1,5 +1,4 @@
 import { fillLink, fillLinkSafe } from "../src/index";
-import { AppLink } from "./shared";
 
 describe("Catchall Test Suite", () => {
   test.each([
@@ -7,7 +6,7 @@ describe("Catchall Test Suite", () => {
     ["unsafe", fillLink],
   ])("%s: can fill single catchall slug", (_, fn) => {
     expect(
-      fn(AppLink.POSTS_CATCHALL_SLUG, {
+      fn("/posts/[...slug]", {
         slug: ["category"],
       })
     ).toEqual("/posts/category");
@@ -17,7 +16,7 @@ describe("Catchall Test Suite", () => {
     ["unsafe", fillLink],
   ])("%s: can fill multiple catchall slugs", (_, fn) => {
     expect(
-      fn(AppLink.POSTS_CATCHALL_SLUG, {
+      fn("/posts/[...slug]", {
         slug: ["category", "music", "jazz", "miles-davis"],
       })
     ).toEqual("/posts/category/music/jazz/miles-davis");
