@@ -1,9 +1,28 @@
 {
   "name": "cl-fill-link",
-  "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
-  "private": true,
+  "description": "Fill generated nextjs links with dynamic values ",
+  "version": "0.0.1",
+  "author": {
+    "name": "Christian Lindeneg",
+    "email": "hi@lindeneg.org",
+    "url": "https://lindeneg.org"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "nextjs",
+    "utility",
+    "generate-links",
+    "dynamic-links"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lindeneg/cl-fill-link.git"
+  },
+  "homepage": "https://github.com/lindeneg/cl-fill-link#readme",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@types/node": "^16.11.13",
     "typescript": "^4.5.4"
