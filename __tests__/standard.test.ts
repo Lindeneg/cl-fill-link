@@ -21,12 +21,12 @@ describe("Standard Test Suite", () => {
         view: "analytics",
       })
     ).toThrow(
-      "Warning: key 'id' is missing from replacer object in link '/admin/user/[id]/dashboard/[view]'"
+      "Error: key 'id' is missing from replacer object in link '/admin/user/[id]/dashboard/[view]'"
     );
   });
   test("safe: throws error on missing single key", () => {
     expect(() => fillLinkSafe(AppLink.ADMIN_USER_ID, {})).toThrow(
-      "Warning: key 'id' is missing from replacer object in link '/admin/user/[id]'"
+      "Error: key 'id' is missing from replacer object in link '/admin/user/[id]'"
     );
   });
   test("unsafe: can fill single key", () => {
