@@ -1,16 +1,11 @@
 import { fillLink, fillLinkSafe } from "../src/index";
-import { AppLink } from "./shared";
 
 type T = [string, string[], string];
 
-const optRootArgs: T = [
-  AppLink.OPTIONAL_CATCHALL_SLUG,
-  ["category"],
-  "/category",
-];
-const optRootEmptyArgs: T = [AppLink.OPTIONAL_CATCHALL_SLUG, [""], "/"];
+const optRootArgs: T = ["/[[...slug]]", ["category"], "/category"];
+const optRootEmptyArgs: T = ["/[[...slug]]", [""], "/"];
 const optNestedArgs: T = [
-  AppLink.USER_OPTIONAL_CATCHALL_SLUG,
+  "/user/[[...slug]]",
   ["settings", "visual", "themes"],
   "/user/settings/visual/themes",
 ];
@@ -38,7 +33,7 @@ describe("Optional Catchall Test Suite", () => {
     ["unsafe", fillLink],
   ])("%s: can fill multiple optional catchall slugs", (_, fn) => {
     expect(
-      fn(AppLink.OPTIONAL_CATCHALL_SLUG, {
+      fn("/[[...slug]]", {
         slug: ["category", "music", "jazz", "miles-davis"],
       })
     ).toEqual("/category/music/jazz/miles-davis");
@@ -48,7 +43,7 @@ describe("Optional Catchall Test Suite", () => {
     ["unsafe", fillLink],
   ])("%s: empty optional catchall slug array is accepted", (_, fn) => {
     expect(
-      fn(AppLink.OPTIONAL_CATCHALL_SLUG, {
+      fn("/[[...slug]]", {
         slug: [],
       })
     ).toEqual("/");
