@@ -1,10 +1,10 @@
 ## Fill dynamic nextjs links
 
-## Install
-
 ###### Note
 
-This program is intended to be with [generate-next-links](https://github.com/Lindeneg/generate-next-links) but it can be used with any input that follows [nextjs](https://nextjs.org/docs/routing/dynamic-routes) dynamic route structure.
+This program is intended to be with [generate-next-links](https://github.com/Lindeneg/generate-next-links) but it can be used with any input that follows nextjs [dynamic routes](https://nextjs.org/docs/routing/dynamic-routes).
+
+## Install
 
 `yarn add cl-fill-link`
 
@@ -60,6 +60,6 @@ fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
 
 ## Why
 
-The `Link` component offered by nextjs natively supports the behavior this program accomplishes, as seen [here](https://nextjs.org/docs/api-reference/next/link#with-url-object). However, that is only useful within that `Link` component. Sometimes it's useful for a filled dynamic link to be constructed outside the `Link` component. This small and simple program is for exactly such a case.
+Nextjs natively supports the behavior this program accomplishes, as seen [here](https://nextjs.org/docs/api-reference/next/link#with-url-object). However, that is only useful within that `Link` component. Sometimes it's useful for a filled dynamic link to be constructed outside the `Link` component. This small and simple program is for exactly such a case.
 
 ---
