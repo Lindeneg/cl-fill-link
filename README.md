@@ -2,7 +2,7 @@
 
 ###### Note
 
-This program is intended to be with [generate-next-links](https://github.com/Lindeneg/generate-next-links) but it can be used with any input that follows nextjs [dynamic routes](https://nextjs.org/docs/routing/dynamic-routes).
+This program is intended to be used with [generate-next-links](https://github.com/Lindeneg/generate-next-links) but it can be used with any input that follows nextjs [dynamic routes](https://nextjs.org/docs/routing/dynamic-routes).
 
 ## Install
 
