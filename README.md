@@ -58,6 +58,46 @@ fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
 
 ---
 
+## Type safety
+
+There's a bit of type-safety as well. If an unknown key is specified in the replacer object, TS will throw an error:
+
+```ts
+// OK
+fillLink("/hello/[there]", { there: "something" });
+
+// Error on `hello` key:
+// Type 'string' is not assignable to type 'never'
+fillLink("/hello/[there]", { there: "something", hello: "something-else " });
+```
+
+Also on catch-all routes, the type expected is always an array of strings. For optional-catch-all routes, `[[...slug]]` an empty array is accepted, as optional catch all routes includes the index of the path, while catch all routes, `[...slug]` only accepts a non-empty array.
+
+```ts
+// OK
+fillLink("/hello/[...there]", { there: ["something"] });
+
+// Error on `there` key:
+// Type 'string' is not assignable to type '[string, ...string[]]'
+fillLink("/hello/[...there]", { there: "something" });
+
+// Error on `there` key:
+// Source has 0 element(s) but target requires 1
+fillLink("/hello/[...there]", { there: [] });
+
+// OK
+fillLink("/hello/[[...there]]", { there: [] });
+
+// OK
+fillLink("/hello/[[...there]]", { there: ["something"] });
+
+// Error on `there` key:
+// Type 'string' is not assignable to type 'string[]'
+fillLink("/hello/[[...there]]", { there: "something" });
+```
+
+---
+
 ## Why
 
 Nextjs natively supports the behavior this program accomplishes, as seen [here](https://nextjs.org/docs/api-reference/next/link#with-url-object). However, that is only useful within that `Link` component. Sometimes it's useful for a filled dynamic link to be constructed outside the `Link` component. This small and simple program is for exactly such a case.
