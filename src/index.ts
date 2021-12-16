@@ -5,7 +5,7 @@ type ReplacerValue<T extends string, K extends unknown> = K extends string
     ? [string, ...string[]]
     : T extends `${infer P}[[...${K}]]`
     ? string[]
-    : T extends `${infer M}${K}${infer N}`
+    : T extends `${infer M}[${K}]${infer N}`
     ? string
     : never
   : never;
