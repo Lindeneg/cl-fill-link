@@ -29,13 +29,13 @@ function getString(target: unknown): string {
 }
 
 function appendQuery<T extends Query>(l: string, query?: T): string {
-  const keys = Object.keys(query || []);
+  const keys = Object.keys(query || {});
   let q = '';
   if (query && keys.length > 0) {
     q += '?';
     const length = keys.length - 1;
     keys.forEach((key, idx) => {
-      const val = getString(query[<keyof T>key]);
+      const val = encodeURIComponent(getString(query[<keyof T>key]));
       q += key + '=' + val;
       if (idx < length) {
         q += '&';

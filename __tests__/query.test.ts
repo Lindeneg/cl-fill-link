@@ -33,4 +33,18 @@ describe('Query Test Suite', () => {
       '/admin/user/1?music=jazz&artist=miles-davis&tune=so-what&year=1959&autoplay=false'
     );
   });
+  test('unsafe: encodes $query to a valid URIComponent', () => {
+    expect(
+      fillLink('/admin/user/[id]', {
+        id: 1,
+        $query: {
+          artist: 'miles davis',
+          tune: 'so what | kind of blue',
+          year: '[1959]',
+        },
+      })
+    ).toEqual(
+      '/admin/user/1?artist=miles%20davis&tune=so%20what%20%7C%20kind%20of%20blue&year=%5B1959%5D'
+    );
+  });
 });
