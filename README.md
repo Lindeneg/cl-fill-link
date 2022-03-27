@@ -4,6 +4,8 @@
 
 This program is intended to be used with [generate-next-links](https://github.com/Lindeneg/generate-next-links) but it can be used with any input that follows nextjs [dynamic routes](https://nextjs.org/docs/routing/dynamic-routes).
 
+It also offers a type-safe implementation.
+
 ## Install
 
 `yarn add cl-fill-link`
@@ -13,6 +15,8 @@ This program is intended to be used with [generate-next-links](https://github.co
 ## Usage
 
 ```ts
+import { fillLink } from 'cl-fill-link';
+
 enum AppLink {
   CUSTOMERID_SETTINGS_VIEW = '/[customerId]/settings/[view]',
   BLOG_OPTIONAL_CATCHALL_SLUG = '/blog/[[...slug]]',
@@ -30,22 +34,59 @@ fillLink(AppLink.BLOG_OPTIONAL_CATCHALL_SLUG, {
 });
 ```
 
-However, if a key is missing, an error is not thrown by default. If this behavior is desired, use `fillLinkSafe`.
+## Type safety
+
+If a key is missing, has an inappropriate type or does not exist, TypeScript will complain
 
 ```ts
-enum AppLink {
-  CUSTOMERID_SETTINGS_VIEW = '/[customerId]/settings/[view]',
-}
-
-// throws an error
-fillLinkSafe(AppLink.CUSTOMERID_SETTINGS_VIEW, {
+// TypeScript Error:
+// Property 'customerId' is missing in type '{ view: string; }'
+// but required in type '{ customerId: PrimitiveTypeConstraint; }'
+fillLink('/[customerId]/settings/[view]', {
   view: 'templates',
 });
 
-// does not throw an error, returns null
-fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
-  view: 'templates',
+// TypeScript Error:
+// Object literal may only specify known properties,
+// but 'view2' does not exist in type
+fillLink('/[customerId]/settings/[view]', {
+  view2: 'templates',
+  customerId: 1,
 });
+
+// TypeScript Error:
+// Type 'string[]' is not assignable to
+// type 'PrimitiveTypeConstraint'.
+fillLink('/[customerId]/settings/[view]', {
+  view: ['templates'],
+  customerId: 1,
+});
+```
+
+The expected type for catch-all routes is always an array of strings. For optional-catch-all routes, `[[...slug]]` an empty array is accepted, as optional catch all routes includes the index of the path, while catch all routes, `[...slug]` only accepts a non-empty array.
+
+```ts
+// OK
+fillLink('/hello/[...there]', { there: ['something'] });
+
+// TypeScript Error:
+// Type 'string' is not assignable to type
+// '[PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]]'
+fillLink('/hello/[...there]', { there: 'something' });
+
+// TypeScript Error:
+// Source has 0 element(s) but target requires 1
+fillLink('/hello/[...there]', { there: [] });
+
+// OK
+fillLink('/hello/[[...there]]', { there: [] });
+
+// OK
+fillLink('/hello/[[...there]]', { there: ['something'] });
+
+// TypeScript Error:
+// Type 'string' is not assignable to type 'PrimitiveTypeConstraint[]'
+fillLink('/hello/[[...there]]', { there: 'something' });
 ```
 
 ## Query Params
@@ -89,46 +130,6 @@ fillLink(AppLink.CATEGORYID_CONTENT_GENRE, {
     year: '[1959]',
   },
 });
-```
-
----
-
-## Type safety
-
-There's a bit of type-safety as well. If an unknown key is specified in the replacer object, TS will throw an error:
-
-```ts
-// OK
-fillLink('/hello/[there]', { there: 'something' });
-
-// Error on `hello` key:
-// Type 'string' is not assignable to type 'never'
-fillLink('/hello/[there]', { there: 'something', hello: 'something-else ' });
-```
-
-Also on catch-all routes, the type expected is always an array of strings. For optional-catch-all routes, `[[...slug]]` an empty array is accepted, as optional catch all routes includes the index of the path, while catch all routes, `[...slug]` only accepts a non-empty array.
-
-```ts
-// OK
-fillLink('/hello/[...there]', { there: ['something'] });
-
-// Error on `there` key:
-// Type 'string' is not assignable to type '[string, ...string[]]'
-fillLink('/hello/[...there]', { there: 'something' });
-
-// Error on `there` key:
-// Source has 0 element(s) but target requires 1
-fillLink('/hello/[...there]', { there: [] });
-
-// OK
-fillLink('/hello/[[...there]]', { there: [] });
-
-// OK
-fillLink('/hello/[[...there]]', { there: ['something'] });
-
-// Error on `there` key:
-// Type 'string' is not assignable to type 'string[]'
-fillLink('/hello/[[...there]]', { there: 'something' });
 ```
 
 ---
