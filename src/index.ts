@@ -69,7 +69,7 @@ export function fillLinkSafe<T extends string, K extends Obj>(
         return e;
       })
       .join('/'),
-    replacer?.$query || {}
+    replacer?.$query
   );
 }
 
