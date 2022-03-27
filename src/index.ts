@@ -4,21 +4,24 @@ type QueryConstraint = Obj<PrimitiveTypeConstraint>;
 type ObjConstraint = Obj<unknown>;
 type Query = { $query?: QueryConstraint };
 
-type ReplacerValue<T extends string, K extends unknown> = K extends string
-  ? K extends '$query'
-    ? QueryConstraint
-    : T extends `${infer U}[...${K}]`
-    ? [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]]
-    : T extends `${infer P}[[...${K}]]`
-    ? PrimitiveTypeConstraint[]
-    : T extends `${infer M}[${K}]${infer N}`
-    ? PrimitiveTypeConstraint
-    : never
-  : never;
+const k = '/[admin]/user/[id]/[...ids]/[[...slugs]]';
 
-type Replacer<T extends string, U extends ObjConstraint> = {
-  [K in keyof U]: ReplacerValue<T, K>;
-} & Query;
+type InferObject<
+  T extends string,
+  C extends ObjConstraint
+> = T extends `${infer K}[[...${infer U}]]${infer O}`
+  ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint[] } & C>
+  : T extends `${infer K}[...${infer U}]${infer O}`
+  ? InferObject<
+      `${K}${O}`,
+      { [I in U]: [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]] } & C
+    >
+  : T extends `${infer K}[${infer U}]${infer O}`
+  ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint } & C>
+  : C;
+
+type Replacer<T extends string, K extends ObjConstraint> = InferObject<T, K> &
+  Query;
 
 function getString(target: unknown): string {
   try {
