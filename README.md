@@ -14,33 +14,27 @@ This program is intended to be used with [generate-next-links](https://github.co
 
 ```ts
 enum AppLink {
-  ...
-  CUSTOMERID_SETTINGS_VIEW = "/[customerId]/settings/[view]",
-  BLOG_OPTIONAL_CATCHALL_SLUG = "/blog/[[...slug]]",
-  ...
+  CUSTOMERID_SETTINGS_VIEW = '/[customerId]/settings/[view]',
+  BLOG_OPTIONAL_CATCHALL_SLUG = '/blog/[[...slug]]',
 }
 
 // returns: '/some-id/settings/templates'
 fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
-    customerId: "some-id",
-    view: "templates"
-  }
-)
+  customerId: 'some-id',
+  view: 'templates',
+});
 
 // returns: '/blog/category/music/jazz/miles-davis'
 fillLink(AppLink.BLOG_OPTIONAL_CATCHALL_SLUG, {
-    slug: ["category", "music", "jazz", "miles-davis"]
-  }
-);
+  slug: ['category', 'music', 'jazz', 'miles-davis'],
+});
 ```
 
 However, if a key is missing, an error is not thrown by default. If this behavior is desired, use `fillLinkSafe`.
 
 ```ts
 enum AppLink {
-  ...
   CUSTOMERID_SETTINGS_VIEW = '/[customerId]/settings/[view]',
-  ...
 }
 
 // throws an error
@@ -56,17 +50,15 @@ fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
 
 ## Query Params
 
-Use the `$query` property to specify [query-parameters](https://en.wikipedia.org/wiki/Query_string)
+Use the `$query` property to specify an object containing [query-parameters](https://en.wikipedia.org/wiki/Query_string). Note that properties of the `$query` object must have values of a `primitive` type.
 
 ```ts
 enum AppLink {
-  ...
   CATEGORYID_CONTENT_GENRE = '/[categoryId]/content/[genre]',
-  ...
 }
 
 // returns: '/music/content/jazz?artist=miles-davis&tune=so-what&year=1959&autoplay=true'
-fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
+fillLink(AppLink.CATEGORYID_CONTENT_GENRE, {
   categoryId: 'music',
   genre: 'jazz',
   $query: {
