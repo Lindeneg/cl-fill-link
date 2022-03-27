@@ -44,25 +44,32 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
 export function fillLinkSafe<T extends string, K extends Obj>(
   link: T,
   replacer: Replacer<T, K>
-) {
-  return link
-    .split("/")
-    .map((e) => {
-      const matches = /\[{1,2}\.{0,3}(\w+)\]{1,2}/.exec(e);
-      if (matches && matches.length > 1) {
-        const key = matches[1];
-        const val = replacer[key];
-        if (typeof val !== "undefined") {
-          return Array.isArray(val) ? val.join("/") : val;
-        } else {
-          throw new Error(
-            `Error: key '${key}' is missing from replacer object in link '${link}'`
-          );
+): string {
+  return appendQuery(
+    link
+      .split('/')
+      .map((e) => {
+        const matches = /\[{1,2}\.{0,3}(\w+)\]{1,2}/.exec(e);
+        if (matches && matches.length > 1) {
+          const key = matches[1];
+          const val = getString(replacer[key]);
+          if (typeof val !== 'undefined') {
+            return Array.isArray(val) ? val.join('/') : val;
+          } else {
+            throw new Error(
+              "Error: key '" +
+                key +
+                "' is missing from replacer object in link '" +
+                link +
+                "'"
+            );
+          }
         }
-      }
-      return e;
-    })
-    .join("/");
+        return e;
+      })
+      .join('/'),
+    replacer?.$query || {}
+  );
 }
 
 export function fillLink<T extends string, K extends Obj>(
