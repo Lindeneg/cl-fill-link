@@ -4,11 +4,9 @@ type QueryConstraint = Obj<PrimitiveTypeConstraint>;
 type ObjConstraint = Obj<unknown>;
 type Query = { $query?: QueryConstraint };
 
-const k = '/[admin]/user/[id]/[...ids]/[[...slugs]]';
-
 type InferObject<
   T extends string,
-  C extends ObjConstraint
+  C extends ObjConstraint = {}
 > = T extends `${infer K}[[...${infer U}]]${infer O}`
   ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint[] } & C>
   : T extends `${infer K}[...${infer U}]${infer O}`
@@ -20,8 +18,7 @@ type InferObject<
   ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint } & C>
   : C;
 
-type Replacer<T extends string, K extends ObjConstraint> = InferObject<T, K> &
-  Query;
+type Replacer<T extends string> = InferObject<T> & Query;
 
 function getString(target: unknown): string {
   try {
@@ -48,9 +45,9 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
   return l + q;
 }
 
-export function fillLinkSafe<T extends string, K extends ObjConstraint>(
+export function fillLinkSafe<T extends string>(
   link: T,
-  replacer: Replacer<T, K>
+  replacer: Replacer<T>
 ): string {
   return appendQuery(
     link
@@ -79,9 +76,9 @@ export function fillLinkSafe<T extends string, K extends ObjConstraint>(
   );
 }
 
-export function fillLink<T extends string, K extends ObjConstraint>(
+export function fillLink<T extends string>(
   link: T,
-  replacer: Replacer<T, K>
+  replacer: Replacer<T>
 ): string | null {
   try {
     return fillLinkSafe(link, replacer);
