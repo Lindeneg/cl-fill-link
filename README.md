@@ -39,21 +39,43 @@ However, if a key is missing, an error is not thrown by default. If this behavio
 ```ts
 enum AppLink {
   ...
-  CUSTOMERID_SETTINGS_VIEW = "/[customerId]/settings/[view]",
+  CUSTOMERID_SETTINGS_VIEW = '/[customerId]/settings/[view]',
   ...
 }
 
 // throws an error
 fillLinkSafe(AppLink.CUSTOMERID_SETTINGS_VIEW, {
-    view: "templates"
-  }
-);
+  view: 'templates',
+});
 
-// does not throw an error, returns the first argument untouched
+// does not throw an error, returns null
 fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
-    view: "templates"
-  }
-);
+  view: 'templates',
+});
+```
+
+## Query Params
+
+Use the `$query` property to specify [query-parameters](https://en.wikipedia.org/wiki/Query_string)
+
+```ts
+enum AppLink {
+  ...
+  CATEGORYID_CONTENT_GENRE = '/[categoryId]/content/[genre]',
+  ...
+}
+
+// returns: '/music/content/jazz?artist=miles-davis&tune=so-what&year=1959&autoplay=true'
+fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
+  categoryId: 'music',
+  genre: 'jazz',
+  $query: {
+    artist: 'miles-davis',
+    tune: 'so-what',
+    year: 1959,
+    autoplay: true,
+  },
+});
 ```
 
 ---
@@ -64,36 +86,36 @@ There's a bit of type-safety as well. If an unknown key is specified in the repl
 
 ```ts
 // OK
-fillLink("/hello/[there]", { there: "something" });
+fillLink('/hello/[there]', { there: 'something' });
 
 // Error on `hello` key:
 // Type 'string' is not assignable to type 'never'
-fillLink("/hello/[there]", { there: "something", hello: "something-else " });
+fillLink('/hello/[there]', { there: 'something', hello: 'something-else ' });
 ```
 
 Also on catch-all routes, the type expected is always an array of strings. For optional-catch-all routes, `[[...slug]]` an empty array is accepted, as optional catch all routes includes the index of the path, while catch all routes, `[...slug]` only accepts a non-empty array.
 
 ```ts
 // OK
-fillLink("/hello/[...there]", { there: ["something"] });
+fillLink('/hello/[...there]', { there: ['something'] });
 
 // Error on `there` key:
 // Type 'string' is not assignable to type '[string, ...string[]]'
-fillLink("/hello/[...there]", { there: "something" });
+fillLink('/hello/[...there]', { there: 'something' });
 
 // Error on `there` key:
 // Source has 0 element(s) but target requires 1
-fillLink("/hello/[...there]", { there: [] });
+fillLink('/hello/[...there]', { there: [] });
 
 // OK
-fillLink("/hello/[[...there]]", { there: [] });
+fillLink('/hello/[[...there]]', { there: [] });
 
 // OK
-fillLink("/hello/[[...there]]", { there: ["something"] });
+fillLink('/hello/[[...there]]', { there: ['something'] });
 
 // Error on `there` key:
 // Type 'string' is not assignable to type 'string[]'
-fillLink("/hello/[[...there]]", { there: "something" });
+fillLink('/hello/[[...there]]', { there: 'something' });
 ```
 
 ---
