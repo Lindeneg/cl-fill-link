@@ -4,6 +4,7 @@ node_modules
 src
 .gitignore
 jest.config.js
+rollup.config.js
 notes
-tsconfig.json
+*.json
 yarn.lock
