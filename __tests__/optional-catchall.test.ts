@@ -22,7 +22,7 @@ describe('Optional Catchall Test Suite', () => {
     '%s - %s: can fill single optional catchall slug',
     (_, __, fn, link, args, expected) => {
       expect(
-        fn<any, any>(link, {
+        fn<any>(link, {
           slug: args,
         })
       ).toEqual(expected);
@@ -43,7 +43,7 @@ describe('Optional Catchall Test Suite', () => {
     ['unsafe', fillLink],
   ])('%s: empty optional catchall slug array is accepted', (_, fn) => {
     expect(
-      fn<any, any>('/[[...slug]]', {
+      fn<any>('/[[...slug]]', {
         slug: [],
       })
     ).toEqual('/');

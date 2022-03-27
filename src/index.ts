@@ -56,7 +56,7 @@ export function fillLinkSafe<T extends string>(
         const matches = /\[{1,2}\.{0,3}(\w+)\]{1,2}/.exec(e);
         if (matches && matches.length > 1) {
           const key = matches[1];
-          const val = replacer[key];
+          const val = replacer[<keyof Replacer<T>>key];
           if (typeof val !== 'undefined') {
             return Array.isArray(val) ? val.join('/') : getString(val);
           } else {
