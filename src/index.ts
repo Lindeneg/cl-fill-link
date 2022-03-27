@@ -30,7 +30,6 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
   let q = '';
   if (query && keys.length > 0) {
     q += '?';
-    const keys = Object.keys(query);
     const length = keys.length - 1;
     keys.forEach((key, idx) => {
       const val = getString(query[<keyof T>key]);
