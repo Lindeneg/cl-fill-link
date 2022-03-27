@@ -2,7 +2,7 @@
   "name": "cl-fill-link",
   "license": "MIT",
   "description": "Fill generated nextjs links with dynamic values ",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "author": {
     "name": "Christian Lindeneg",
     "email": "hi@lindeneg.org",
