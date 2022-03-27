@@ -86,6 +86,6 @@ export function fillLink<T extends string, K extends ObjConstraint>(
     if (process.env.NODE_ENV === 'development') {
       console.log(err);
     }
-    return null;
   }
+  return null;
 }
