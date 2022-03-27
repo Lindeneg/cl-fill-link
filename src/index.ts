@@ -1,12 +1,15 @@
-type Obj = Record<string, unknown>;
+type PrimitiveTypeConstraint = boolean | string | number | Date;
+
+type Obj = Record<string, PrimitiveTypeConstraint>;
+type Query = { $query?: PrimitiveTypeConstraint };
 
 type ReplacerValue<T extends string, K extends unknown> = K extends string
   ? T extends `${infer U}[...${K}]`
-    ? [string, ...string[]]
+    ? [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]]
     : T extends `${infer P}[[...${K}]]`
-    ? string[]
+    ? PrimitiveTypeConstraint[]
     : T extends `${infer M}[${K}]${infer N}`
-    ? string
+    ? PrimitiveTypeConstraint
     : never
   : never;
 
