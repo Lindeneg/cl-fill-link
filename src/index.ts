@@ -1,10 +1,13 @@
-type PrimitiveTypeConstraint = boolean | string | number | Date;
-
-type Obj = Record<string, PrimitiveTypeConstraint>;
-type Query = { $query?: Obj };
+type PrimitiveTypeConstraint = boolean | string | number;
+type Obj<T> = Record<string, T>;
+type QueryConstraint = Obj<PrimitiveTypeConstraint>;
+type ObjConstraint = Obj<unknown>;
+type Query = { $query?: QueryConstraint };
 
 type ReplacerValue<T extends string, K extends unknown> = K extends string
-  ? T extends `${infer U}[...${K}]`
+  ? K extends '$query'
+    ? QueryConstraint
+    : T extends `${infer U}[...${K}]`
     ? [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]]
     : T extends `${infer P}[[...${K}]]`
     ? PrimitiveTypeConstraint[]
@@ -13,7 +16,7 @@ type ReplacerValue<T extends string, K extends unknown> = K extends string
     : never
   : never;
 
-type Replacer<T extends string, U extends Obj> = {
+type Replacer<T extends string, U extends ObjConstraint> = {
   [K in keyof U]: ReplacerValue<T, K>;
 } & Query;
 
@@ -42,7 +45,7 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
   return l + q;
 }
 
-export function fillLinkSafe<T extends string, K extends Obj>(
+export function fillLinkSafe<T extends string, K extends ObjConstraint>(
   link: T,
   replacer: Replacer<T, K>
 ): string {
@@ -73,7 +76,7 @@ export function fillLinkSafe<T extends string, K extends Obj>(
   );
 }
 
-export function fillLink<T extends string, K extends Obj>(
+export function fillLink<T extends string, K extends ObjConstraint>(
   link: T,
   replacer: Replacer<T, K>
 ): string | null {
