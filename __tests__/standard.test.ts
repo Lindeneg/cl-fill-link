@@ -40,12 +40,12 @@ describe("Standard Test Suite", () => {
     ).toEqual("/admin/user/1/dashboard/analytics");
   });
   test("unsafe: does not throw error on missing single key", () => {
-    expect(fillLink("/admin/user/[id]", {})).toEqual("/admin/user/[id]");
+    expect(fillLink("/admin/user/[id]", {})).toEqual(null);
   });
   test("unsafe: does not throw error on missing nested keys", () => {
     expect(
       fillLink("/admin/user/[id]/dashboard/[view]", { view: "analytics" })
-    ).toEqual("/admin/user/[id]/dashboard/[view]");
+    ).toEqual(null);
   });
   test("all: defined but empty value is accepted", () => {
     expect(fillLink("/admin/user/[id]", { id: "" })).toEqual("/admin/user/");
