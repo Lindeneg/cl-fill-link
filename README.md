@@ -50,7 +50,9 @@ fillLink(AppLink.CUSTOMERID_SETTINGS_VIEW, {
 
 ## Query Params
 
-Use the `$query` property to specify an object containing [query-parameters](https://en.wikipedia.org/wiki/Query_string). Note that properties of the `$query` object must have values of a `primitive` type.
+Use the `$query` property to specify an object containing [query-parameters](https://en.wikipedia.org/wiki/Query_string). The `$` sign is prefixed to avoid collision with an actual `query` key in the link itself.
+
+Note that properties of the `$query` object must have values of a `primitive` type.
 
 ```ts
 enum AppLink {
@@ -66,6 +68,25 @@ fillLink(AppLink.CATEGORYID_CONTENT_GENRE, {
     tune: 'so-what',
     year: 1959,
     autoplay: true,
+  },
+});
+```
+
+The parameters are each encoded into valid `URI` components and thus you can safely do stuff like this
+
+```ts
+enum AppLink {
+  CATEGORYID_CONTENT_GENRE = '/[categoryId]/content/[genre]',
+}
+
+// returns: '/music/content/jazz?artist=miles%20davis&tune=so%20what%20%7C%20kind%20of%20blue&year=%5B1959%5D'
+fillLink(AppLink.CATEGORYID_CONTENT_GENRE, {
+  categoryId: 'music',
+  genre: 'jazz',
+  $query: {
+    artist: 'miles davis',
+    tune: 'so what | kind of blue',
+    year: '[1959]',
   },
 });
 ```
