@@ -9,7 +9,7 @@ describe('Query Test Suite', () => {
           music: 'jazz',
           artist: 'miles-davis',
           tune: 'so-what',
-          year: 1967,
+          year: 1959,
           autoplay: true,
         },
       })
@@ -25,7 +25,7 @@ describe('Query Test Suite', () => {
           music: 'jazz',
           artist: 'miles-davis',
           tune: 'so-what',
-          year: 1967,
+          year: 1959,
           autoplay: false,
         },
       })
