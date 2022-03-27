@@ -10,10 +10,27 @@ describe('Query Test Suite', () => {
           artist: 'miles-davis',
           tune: 'so-what',
           year: 1967,
+          autoplay: true,
         },
       })
     ).toEqual(
-      '/admin/user/1?music=jazz&artist=miles-davis&tune=so-what&year=1967'
+      '/admin/user/1?music=jazz&artist=miles-davis&tune=so-what&year=1959&autoplay=true'
+    );
+  });
+  test('unsafe: can fill single key with $query', () => {
+    expect(
+      fillLink('/admin/user/[id]', {
+        id: 1,
+        $query: {
+          music: 'jazz',
+          artist: 'miles-davis',
+          tune: 'so-what',
+          year: 1967,
+          autoplay: false,
+        },
+      })
+    ).toEqual(
+      '/admin/user/1?music=jazz&artist=miles-davis&tune=so-what&year=1959&autoplay=false'
     );
   });
 });
