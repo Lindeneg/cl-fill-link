@@ -75,13 +75,13 @@ export function fillLinkSafe<T extends string, K extends Obj>(
 export function fillLink<T extends string, K extends Obj>(
   link: T,
   replacer: Replacer<T, K>
-) {
+): string | null {
   try {
     return fillLinkSafe(link, replacer);
   } catch (err) {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       console.log(err);
     }
-    return link;
+    return null;
   }
 }
