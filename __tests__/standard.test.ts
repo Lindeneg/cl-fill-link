@@ -16,6 +16,7 @@ describe('Standard Test Suite', () => {
   });
   test('safe: throws error on missing nested keys', () => {
     expect(() =>
+      //@ts-expect-error testing invalid key
       fillLinkSafe('/admin/user/[id]/dashboard/[view]', {
         view: 'analytics',
       })
@@ -24,6 +25,7 @@ describe('Standard Test Suite', () => {
     );
   });
   test('safe: throws error on missing single key', () => {
+    //@ts-expect-error testing missing key
     expect(() => fillLinkSafe('/admin/user/[id]', {})).toThrow(
       "Error: key 'id' is missing from replacer object in link '/admin/user/[id]'"
     );
@@ -40,10 +42,12 @@ describe('Standard Test Suite', () => {
     ).toEqual('/admin/user/1/dashboard/analytics');
   });
   test('unsafe: does not throw error on missing single key', () => {
+    //@ts-expect-error testing missing key
     expect(fillLink('/admin/user/[id]', {})).toEqual(null);
   });
   test('unsafe: does not throw error on missing nested keys', () => {
     expect(
+      //@ts-expect-error testing missing key
       fillLink('/admin/user/[id]/dashboard/[view]', { view: 'analytics' })
     ).toEqual(null);
   });
