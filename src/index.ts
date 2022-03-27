@@ -54,9 +54,9 @@ export function fillLinkSafe<T extends string, K extends Obj>(
         const matches = /\[{1,2}\.{0,3}(\w+)\]{1,2}/.exec(e);
         if (matches && matches.length > 1) {
           const key = matches[1];
-          const val = getString(replacer[key]);
+          const val = replacer[key];
           if (typeof val !== 'undefined') {
-            return Array.isArray(val) ? val.join('/') : val;
+            return Array.isArray(val) ? val.join('/') : getString(val);
           } else {
             throw new Error(
               "Error: key '" +
