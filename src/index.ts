@@ -45,7 +45,7 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
   return l + q;
 }
 
-export function fillLinkSafe<T extends string>(
+export function fillLink<T extends string>(
   link: T,
   replacer: Replacer<T>
 ): string {
@@ -76,12 +76,12 @@ export function fillLinkSafe<T extends string>(
   );
 }
 
-export function fillLink<T extends string>(
+export function fillLinkSafe<T extends string>(
   link: T,
   replacer: Replacer<T>
 ): string | null {
   try {
-    return fillLinkSafe(link, replacer);
+    return fillLink(link, replacer);
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.log(err);
