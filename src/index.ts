@@ -26,8 +26,9 @@ function getString(target: unknown): string {
 }
 
 function appendQuery<T extends Query>(l: string, query?: T): string {
-  let q = '?';
+  let q = '';
   if (query) {
+    q += '?';
     const keys = Object.keys(query);
     const length = keys.length - 1;
     keys.forEach((key, idx) => {
