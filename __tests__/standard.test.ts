@@ -48,6 +48,6 @@ describe('Standard Test Suite', () => {
     ).toEqual(null);
   });
   test('all: defined but empty value is accepted', () => {
-    expect(fillLink('/admin/user/[id]', { id: 1 })).toEqual('/admin/user/');
+    expect(fillLink('/admin/user/[id]', { id: '' })).toEqual('/admin/user/');
   });
 });
