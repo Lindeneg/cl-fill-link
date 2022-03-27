@@ -4,21 +4,21 @@ type QueryConstraint = Obj<PrimitiveTypeConstraint>;
 type ObjConstraint = Obj<unknown>;
 type Query = { $query?: QueryConstraint };
 
-type ReplacerValue<T extends string, K extends unknown> = K extends string
-  ? K extends '$query'
-    ? QueryConstraint
-    : T extends `${infer U}[...${K}]`
-    ? [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]]
-    : T extends `${infer P}[[...${K}]]`
-    ? PrimitiveTypeConstraint[]
-    : T extends `${infer M}[${K}]${infer N}`
-    ? PrimitiveTypeConstraint
-    : never
-  : never;
+type InferObject<
+  T extends string,
+  C extends ObjConstraint = {}
+> = T extends `${infer K}[[...${infer U}]]${infer O}`
+  ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint[] } & C>
+  : T extends `${infer K}[...${infer U}]${infer O}`
+  ? InferObject<
+      `${K}${O}`,
+      { [I in U]: [PrimitiveTypeConstraint, ...PrimitiveTypeConstraint[]] } & C
+    >
+  : T extends `${infer K}[${infer U}]${infer O}`
+  ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint } & C>
+  : C;
 
-type Replacer<T extends string, U extends ObjConstraint> = {
-  [K in keyof U]: ReplacerValue<T, K>;
-} & Query;
+type Replacer<T extends string> = InferObject<T> & Query;
 
 function getString(target: unknown): string {
   try {
@@ -45,9 +45,9 @@ function appendQuery<T extends Query>(l: string, query?: T): string {
   return l + q;
 }
 
-export function fillLinkSafe<T extends string, K extends ObjConstraint>(
+export function fillLink<T extends string>(
   link: T,
-  replacer: Replacer<T, K>
+  replacer: Replacer<T>
 ): string {
   return appendQuery(
     link
@@ -56,7 +56,7 @@ export function fillLinkSafe<T extends string, K extends ObjConstraint>(
         const matches = /\[{1,2}\.{0,3}(\w+)\]{1,2}/.exec(e);
         if (matches && matches.length > 1) {
           const key = matches[1];
-          const val = replacer[key];
+          const val = replacer[<keyof Replacer<T>>key];
           if (typeof val !== 'undefined') {
             return Array.isArray(val) ? val.join('/') : getString(val);
           } else {
@@ -76,12 +76,12 @@ export function fillLinkSafe<T extends string, K extends ObjConstraint>(
   );
 }
 
-export function fillLink<T extends string, K extends ObjConstraint>(
+export function fillLinkSafe<T extends string>(
   link: T,
-  replacer: Replacer<T, K>
+  replacer: Replacer<T>
 ): string | null {
   try {
-    return fillLinkSafe(link, replacer);
+    return fillLink(link, replacer);
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.log(err);

@@ -1,53 +1,59 @@
 import { fillLink, fillLinkSafe } from '../src/index';
 
 describe('Standard Test Suite', () => {
-  test('safe: can fill single key', () => {
-    expect(fillLinkSafe('/admin/user/[id]', { id: '1' })).toEqual(
-      '/admin/user/1'
-    );
+  test('unsafe: can fill single key', () => {
+    expect(fillLink('/admin/user/[id]', { id: '1' })).toEqual('/admin/user/1');
   });
-  test('safe: can fill nested keys', () => {
+  test('unsafe: can fill nested keys', () => {
     expect(
-      fillLinkSafe('/admin/user/[id]/dashboard/[view]', {
+      fillLink('/admin/user/[id]/dashboard/[view]', {
         id: '1',
         view: 'analytics',
       })
     ).toEqual('/admin/user/1/dashboard/analytics');
   });
-  test('safe: throws error on missing nested keys', () => {
+  test('unsafe: throws error on missing nested keys', () => {
     expect(() =>
-      fillLinkSafe('/admin/user/[id]/dashboard/[view]', {
+      //@ts-expect-error testing invalid key
+      fillLink('/admin/user/[id]/dashboard/[view]', {
         view: 'analytics',
       })
     ).toThrow(
       "Error: key 'id' is missing from replacer object in link '/admin/user/[id]/dashboard/[view]'"
     );
   });
-  test('safe: throws error on missing single key', () => {
-    expect(() => fillLinkSafe('/admin/user/[id]', {})).toThrow(
+  test('unsafe: throws error on missing single key', () => {
+    //@ts-expect-error testing missing key
+    expect(() => fillLink('/admin/user/[id]', {})).toThrow(
       "Error: key 'id' is missing from replacer object in link '/admin/user/[id]'"
     );
   });
-  test('unsafe: can fill single key', () => {
-    expect(fillLink('/admin/user/[id]', { id: 1 })).toEqual('/admin/user/1');
+  test('safe: can fill single key', () => {
+    expect(fillLinkSafe('/admin/user/[id]', { id: 1 })).toEqual(
+      '/admin/user/1'
+    );
   });
-  test('unsafe: can fill nested keys', () => {
+  test('safe: can fill nested keys', () => {
     expect(
-      fillLink('/admin/user/[id]/dashboard/[view]', {
+      fillLinkSafe('/admin/user/[id]/dashboard/[view]', {
         id: 1,
         view: 'analytics',
       })
     ).toEqual('/admin/user/1/dashboard/analytics');
   });
-  test('unsafe: does not throw error on missing single key', () => {
-    expect(fillLink('/admin/user/[id]', {})).toEqual(null);
+  test('safe: does not throw error on missing single key', () => {
+    //@ts-expect-error testing missing key
+    expect(fillLinkSafe('/admin/user/[id]', {})).toEqual(null);
   });
-  test('unsafe: does not throw error on missing nested keys', () => {
+  test('safe: does not throw error on missing nested keys', () => {
     expect(
-      fillLink('/admin/user/[id]/dashboard/[view]', { view: 'analytics' })
+      //@ts-expect-error testing missing key
+      fillLinkSafe('/admin/user/[id]/dashboard/[view]', { view: 'analytics' })
     ).toEqual(null);
   });
   test('all: defined but empty value is accepted', () => {
-    expect(fillLink('/admin/user/[id]', { id: '' })).toEqual('/admin/user/');
+    expect(fillLinkSafe('/admin/user/[id]', { id: '' })).toEqual(
+      '/admin/user/'
+    );
   });
 });
