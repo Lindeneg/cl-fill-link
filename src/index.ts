@@ -4,7 +4,7 @@ type QueryConstraint = Obj<PrimitiveTypeConstraint>;
 type ObjConstraint = Obj<unknown>;
 type Query = { $query?: QueryConstraint };
 
-type InferObject<
+export type InferObject<
   T extends string,
   C extends ObjConstraint = {}
 > = T extends `${infer K}[[...${infer U}]]${infer O}`
@@ -18,7 +18,7 @@ type InferObject<
   ? InferObject<`${K}${O}`, { [I in U]: PrimitiveTypeConstraint } & C>
   : C;
 
-type Replacer<T extends string> = InferObject<T> & Query;
+export type Replacer<T extends string> = InferObject<T> & Query;
 
 function getString(target: unknown): string {
   try {
